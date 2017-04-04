@@ -22,17 +22,5 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/NIYOMWUNGERI/.m2/repository/org/glassfish/javax.faces/2.2.0/javax.faces-2.2.0.jar">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="org.eclipse.jst.component.archivename" value="javax.faces-2.2.0.jar"/>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/NIYOMWUNGERI/.m2/repository/org/glassfish/javax.faces/2.2.0/javax.faces-2.2.0-javadoc.jar!/"/>
-			<attribute name="maven.groupId" value="org.glassfish"/>
-			<attribute name="maven.artifactId" value="javax.faces"/>
-			<attribute name="maven.version" value="2.2.0"/>
-			<attribute name="maven.scope" value="compile"/>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
