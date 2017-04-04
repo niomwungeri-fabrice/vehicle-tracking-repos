@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="bootstrap-theme.css" />
+	<h:outputStylesheet library="css" name="header.css" />
+	<title>Owner's Registration</title>
+</h:head>
+<h:body>
+	<div class="container">
+		<div class="jumbotron" style="background-color: #3790fc;"></div>
+		<h:form>
+			<p:commandButton value="Log out"
+				action="#{generalNuvigation.goToLogin}" style="margin-left:1050px"
+				styleClass="btn btn-danger" icon="fa fa-sign-out">
+				<p:confirm header="Confirm"
+					message="Are you sure you want to log out?" icon="fa fa-question" />
+			</p:commandButton>
+			<p:confirmDialog global="true" hideEffect="fade" showEffect="fade">
+				<p:commandButton value="Yes" icon="fa fa-check"
+					styleClass="ui-confirmdialog-yes" />
+				<p:commandButton value="No" icon="fa fa-close"
+					styleClass="ui-confirmdialog-no" />
+			</p:confirmDialog>
+
+		</h:form>
+		<div class="row">
+			<p:menubar style="margin-bottom:7px; margin-top: 15px">
+				<p:submenu label="#{authenticate.loggedInUser.username}"
+					icon="fa fa-user">
+					<p:menuitem value="Change Password" url="changePassword.xhtml" />
+					<p:menuitem value="Home" url="index.xhtml" />
+
+				</p:submenu>
+				<f:facet name="options">
+					<h:outputLabel
+						value="Welcome, #{authenticate.loggedInUser.fname} #{authenticate.loggedInUser.lname}" />
+				</f:facet>
+			</p:menubar>
+			<p:messages />
+			<p:tabView id="mainTab">
+				<p:tab title="Car and Owners" id="carOwners">
+					<h:form id="first">
+						<div class="row">
+							<div class="col-xs-10">
+								<p:wizard flowListener="#{registerOwners.onFlowProcess}">
+									<p:tab id="personal" title="Personal">
+										<p:panel header="Personal Details">
+											<h:panelGrid columns="3">
+												<p:watermark value="National Id*" for="nid" />
+												<p:inputText value="#{registerOwners.owner.nationalId}"
+													id="nid" validatorMessage="Must be greater than 16 digit"
+													label="National id" required="true">
+													<f:validateLength minimum="16" maximum="20" for="nidMsg" />
+													<f:convertNumber minIntegerDigits="0" maxIntegerDigits="9"
+														for="nidMsg" />
+													<p:ajax update="nidMsg" event="keyup" />
+												</p:inputText>
+												<p:message for="nid" id="nidMsg" />
+
+												<p:watermark value="First Name*" for="fname" />
+												<p:inputText value="#{registerOwners.owner.firstName}"
+													id="fname"
+													validatorMessage="Must be between 4 and 25 Charachers"
+													label="First Name" required="true" style="margin-top:7px">
+													<f:validateLength minimum="4" maximum="25" for="fname" />
+													<p:ajax update="fMsg" event="keyup" />
+												</p:inputText>
+												<p:message for="fname" id="fMsg" />
+
+												<p:watermark value="Last Name*" for="lname" />
+												<p:inputText id="lname" label="Last Name"
+													value="#{registerOwners.owner.lastName}" required="true"
+													style="margin-top:7px"
+													validatorMessage="Must be between 4 and 25 Charachers"
+													lang="Last Name">
+													<f:validateLength minimum="4" maximum="25" />
+													<p:ajax update="userMsg" event="keyup" />
+												</p:inputText>
+												<p:message id="userMsg" for="lname" />
+												<p:outputLabel value="" />
+
+											</h:panelGrid>
+											<h:outputText value="Skip to last: " />
+											<h:selectBooleanCheckbox value="#{registerOwners.skip}" />
+										</p:panel>
+									</p:tab>
+									<p:tab id="contact" title="Contact">
+										<p:panel header="Contact Details">
+											<h:panelGrid columns="3">
+												<p:watermark value="Phone Number" for="phone" />
+												<p:inputMask mask="999 999 9999"
+													value="#{registerOwners.owner.phone}" id="phone"
+													required="true" label="Phone">
+													<p:ajax event="keyup" update="phoneMsg" />
+												</p:inputMask>
+												<p:message id="phoneMsg" for="phone" />
+												<p:watermark value="Email" for="email" />
+												<p:inputText value="#{registerOwners.owner.email}"
+													id="email" style="margin-top:7px">
+
+												</p:inputText>
+												<p:message id="emailMsg" for="email" />
+											</h:panelGrid>
+										</p:panel>
+									</p:tab>
+									<p:tab id="address" title="Address">
+										<p:panel header="Address Details">
+											<h:panelGrid columns="3">
+												<p:selectOneMenu id="provi" required="true"
+													value="#{registerOwners.selectedProvinces}"
+													style="margin-top:7px; margin-bottom:7px" rendered="true">
+													<f:selectItem itemLabel="Select Province" itemValue="" />
+													<f:selectItems value="#{registerOwners.provinces}" />
+												</p:selectOneMenu>
+												<p:message for="provi" />
+											</h:panelGrid>
+										</p:panel>
+									</p:tab>
+									<p:tab id="car" title="Cars">
+										<p:panel header="Car Information" style="margin-top:7px">
+											<h:panelGrid columns="4">
+												<p:watermark value="Plate Number" for="plate" />
+												<p:inputText value="#{registerOwners.car.carPlate}"
+													id="plate" label="Plate Number" required="true">
+													<p:ajax update="plateMsg" event="keyup" />
+													<f:validateRegex pattern="[A-Z]{3}[0-9]{3}[A-Z]{1}" />
+												</p:inputText>
+												<p:outputLabel value=" " />
+												<p:message id="plateMsg" for="plate" />
+
+												<p:watermark value="Brand" for="brand" />
+												<p:inputText value="#{registerOwners.car.brand}" id="brand"
+													label="Brand" required="true" style="margin-top:7px">
+													<p:ajax update="brandMsg" event="keyup" />
+												</p:inputText>
+												<p:outputLabel value=" " />
+												<p:message id="brandMsg" for="brand" />
+
+												<p:watermark value="Chassis Number" for="chassisNumber" />
+												<p:inputText value="#{registerOwners.car.chassisNumber}"
+													id="chassisNumber" label="Chassis" required="true"
+													style="margin-top:7px">
+													<p:ajax update="chassisNumberMsg" event="keyup" />
+												</p:inputText>
+												<p:tooltip for="chassisNumber" onHide="blur" onShow="focus"
+													value="Chassis Number" />
+												<p:message id="chassisNumberMsg" for="chassisNumber" />
+
+												<p:watermark value="Manifactured Year"
+													for="manifacturedYear" />
+												<p:inputText value="#{registerOwners.car.manifacturedYear}"
+													id="manifacturedYear" label="Man.Year" required="true"
+													style="margin-top:7px">
+													<p:ajax update="manifacturedYearMsg" event="keyup" />
+												</p:inputText>
+												<p:tooltip for="manifacturedYear" onHide="blur"
+													onShow="focus" value="Manifactured Year" />
+												<p:message id="manifacturedYearMsg" for="manifacturedYear" />
+
+												<p:watermark value="No.of Sits(e.g. 5)" for="sits" />
+												<p:inputText value="#{registerOwners.car.sits}" id="sits"
+													label="Sits" required="true" style="margin-top:7px">
+													<p:ajax update="sitsMsg" event="keyup" />
+												</p:inputText>
+												<p:tooltip for="sits" onHide="blur" onShow="focus"
+													value="No.of Sits(e.g. 5)" />
+												<p:message id="sitsMsg" for="sits" />
+
+												<p:outputLabel value="" />
+												<p:selectOneMenu value="#{registerOwners.selectedType}"
+													editable="true" effect="fade" filter="true"
+													filterMatchMode="startsWith" style="margin-top:7px">
+													<f:selectItems value="#{registerOwners.carType}" />
+												</p:selectOneMenu>
+
+												<h:outputLabel value="" />
+												<p:outputLabel value=" " />
+
+											</h:panelGrid>
+											<p:messages />
+										</p:panel>
+
+									</p:tab>
+									<p:tab id="confirm" title="Confirmation">
+
+										<p:panel header="Confirmation">
+											<p:messages showSummary="true" />
+											<h:panelGrid columns="3" columnClasses="grid,grid,grid">
+
+												<p:panel header="Personal Info" style="margin-right:7px">
+													<h:panelGrid columns="2">
+														<p:outputLabel value="NID:" />
+														<h:outputText value="#{registerOwners.owner.nationalId}" />
+
+														<h:outputLabel value="First Name:" />
+														<h:outputText value="#{registerOwners.owner.firstName}" />
+
+														<h:outputLabel value="Last Name:" />
+														<h:outputText value="#{registerOwners.owner.lastName}" />
+													</h:panelGrid>
+												</p:panel>
+
+												<p:panel header="Address Info" style="margin-right:7px">
+													<h:panelGrid columns="2">
+														<h:outputLabel value="Phone:" />
+														<h:outputText value="#{registerOwners.owner.phone}" />
+
+														<h:outputLabel value="Email:" />
+														<h:outputText value="#{registerOwners.owner.email}" />
+													</h:panelGrid>
+
+												</p:panel>
+												<p:panel header="Car Info" style="margin-right:7px">
+													<h:panelGrid columns="2">
+														<h:outputLabel value="Plate:" />
+														<h:outputText value="#{registerOwners.car.carPlate}" />
+
+														<h:outputLabel value="Brand:" />
+														<h:outputText value="#{registerOwners.car.brand}" />
+
+														<h:outputLabel value="Chasis" />
+														<h:outputText value="#{registerOwners.car.chassisNumber}" />
+
+														<h:outputLabel value="Mfr.year:" />
+														<h:outputText
+															value="#{registerOwners.car.manifacturedYear}" />
+
+														<h:outputLabel value="Sits:" />
+														<h:outputText value="#{registerOwners.car.sits}" />
+
+														<h:outputLabel value="Car Type" />
+														<h:outputText value="#{registerOwners.selectedType}" />
+
+													</h:panelGrid>
+												</p:panel>
+
+											</h:panelGrid>
+											<p:commandButton value="Register" update="first"
+												action="#{registerOwners.register}" process="@this">
+												<f:setPropertyActionListener
+													value="#{authenticate.loggedInUser.username}"
+													target="#{registerOwners.action}" />
+												<p:confirm header="Confirmation"
+													message="Are you sure you want to save this Information?" />
+											</p:commandButton>
+											<p:confirmDialog global="true" hideEffect="fade"
+												showEffect="fade">
+												<p:commandButton value="Yes"
+													styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+												<p:commandButton value="No"
+													styleClass="ui-confirmdialog-yes" icon="fa fa-close" />
+											</p:confirmDialog>
+										</p:panel>
+									</p:tab>
+								</p:wizard>
+
+							</div>
+							<div class="col-xs-2">
+								<p:commandButton value="Add new Car" type="button"
+									onclick="PF('dlg1').show();" />
+								<p:dialog header="Add new Car" widgetVar="dlg1" minHeight="100">
+									<p:panel header="Add another car">
+										<p:growl id="growl" />
+										<h:panelGrid columns="4">
+											<p:watermark value="National Id*" for="nid_another" />
+											<p:autoComplete required="true" id="nid_another"
+												forceSelection="false"
+												value="#{registerOwners.owner.nationalId}"
+												validatorMessage="Must be greater than 16 digit"
+												label="National id"
+												completeMethod="#{searchCar.autoCompleteOwner}">
+												<f:validateLength minimum="16" maximum="20"
+													for="nidMsg_another" />
+												<f:convertNumber minIntegerDigits="0" maxIntegerDigits="9"
+													for="nidMsg_another" />
+												<p:ajax update="nidMsg_another" event="keyup" />
+											</p:autoComplete>
+											<p:outputLabel value=" " />
+											<p:message for="nid_another" id="nidMsg_another" />
+
+											<p:watermark value="Plate Number" for="plate_another" />
+											<p:inputText value="#{registerOwners.car.carPlate}"
+												style="margin-top:7px"
+												validatorMessage="ZZZ999Z format not met" id="plate_another"
+												label="Plate Number" required="true">
+												<p:ajax update="plateMsg_another" event="keyup" />
+												<f:validateRegex pattern="[A-Z]{3}[0-9]{3}[A-Z]{1}" />
+											</p:inputText>
+											<p:outputLabel value=" " />
+											<p:message id="plateMsg_another" for="plate_another" />
+
+											<p:watermark value="Brand" for="brand_another" />
+											<p:inputText value="#{registerOwners.car.brand}"
+												id="brand_another" label="Brand" required="true"
+												style="margin-top:7px">
+												<p:ajax update="brandMsg_another" event="keyup" />
+											</p:inputText>
+											<p:outputLabel value=" " />
+											<p:message id="brandMsg_another" for="brand_another" />
+
+											<p:watermark value="Manifactured Year"
+												for="manifacturedYear_another" />
+											<p:inputText value="#{registerOwners.car.manifacturedYear}"
+												id="manifacturedYear_another" label="Man.Year"
+												required="true" style="margin-top:7px">
+												<p:ajax update="manifacturedYearMsg_another" event="keyup" />
+											</p:inputText>
+											<p:tooltip for="manifacturedYear_another" onHide="blur"
+												onShow="focus" value="Manifactured Year" />
+											<p:message id="manifacturedYearMsg_another"
+												for="manifacturedYear_another" />
+
+											<p:watermark value="Chassis Number"
+												for="chassisNumber_onother" />
+											<p:inputText value="#{registerOwners.car.chassisNumber}"
+												id="chassisNumber_onother" label="Chassis" required="true"
+												style="margin-top:7px">
+												<p:ajax update="chassisNumberMsg_another" event="keyup" />
+											</p:inputText>
+											<p:tooltip for="chassisNumber_onother" onHide="blur"
+												onShow="focus" value="Chassis Number" />
+											<p:message id="chassisNumberMsg_another"
+												for="chassisNumber_onother" />
+
+											<p:watermark value="No.of Sits(e.g. 5)" for="sits_onother" />
+											<p:inputText value="#{registerOwners.car.sits}"
+												id="sits_onother" label="Sits" required="true"
+												style="margin-top:7px">
+												<p:ajax update="sitsMsg_another" event="keyup" />
+											</p:inputText>
+											<p:tooltip for="sits_onother" onHide="blur" onShow="focus"
+												value="No.of Sits(e.g. 5)" />
+											<p:message id="sitsMsg_another" for="sits_onother" />
+
+											<p:outputLabel value="" />
+											<p:selectOneMenu value="#{registerOwners.selectedType}"
+												editable="true" effect="fade" filter="true" required="true"
+												filterMatchMode="startsWith" style="margin-top:7px">
+												<f:selectItems value="#{registerOwners.carType}" />
+											</p:selectOneMenu>
+											<p:outputLabel value="" />
+											<p:outputLabel value=" " />
+
+											<p:watermark value="Comments" for="comments" />
+											<p:inputTextarea id="comments" style="margin-top:7px"
+												value="#{registerOwners.ownership.comments}" cols="30"
+												rows="5" maxlength="255" counter="wordCounter1"
+												counterTemplate="{0} Remaining" />
+
+											<h:outputLabel value="" id="wordCounter1" />
+
+
+											<h:outputLabel value="" />
+											<h:outputLabel value="" />
+											<p:commandButton value="Add" style="margin-top:7px"
+												action="#{registerOwners.addNewCar}" update="growl"
+												process="@this">
+												<f:setPropertyActionListener
+													value="#{authenticate.loggedInUser.username}"
+													target="#{registerOwners.action}" />
+											</p:commandButton>
+
+										</h:panelGrid>
+
+									</p:panel>
+								</p:dialog>
+
+							</div>
+						</div>
+					</h:form>
+				</p:tab>
+				<p:tab title="Mitation">
+					<h:form id="second">
+						<p:messages closable="true" />
+						<div class="row">
+							<div class="col-xs-6">
+								<p:panel header="Transfer from">
+
+									<h:panelGrid columns="3">
+										<p:watermark value="Search" for="transferCar" />
+										<p:autoComplete id="transferCar" value="#{searchCar.searcKey}"
+											completeMethod="#{searchCar.autoCompleteCar}">
+											<p:ajax update="carList" listener="#{searchCar.search()}"
+												event="keyup" />
+										</p:autoComplete>
+										<p:message id="transferCarMsg" for="transferCar" />
+									</h:panelGrid>
+
+									<p:dataTable value="#{searchCar.carList}" var="car"
+										id="carList" style="margin-top:7px">
+										<p:column>
+											<f:facet name="header">Plate Number</f:facet>
+											<h:outputText value="#{car.carPlate}" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">Brand</f:facet>
+											<h:outputText value="#{car.brand}" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">Owned</f:facet>
+											<h:outputText value="#{car.owner.firstName}" />
+										</p:column>
+
+									</p:dataTable>
+
+								</p:panel>
+
+							</div>
+
+							<p:confirmDialog global="true" hideEffect="fade"
+								showEffect="fade">
+								<p:commandButton value="Yes" icon="fa fa-check"
+									styleClass="ui-confirmdialog-yes" />
+								<p:commandButton value="No" icon="fa fa-close"
+									styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+							<div class="col-xs-6">
+								<p:panel header="Transfer To" id="transferPanel">
+
+									<h:panelGrid columns="3">
+										<p:watermark value="Enter NID" for="transferTo" />
+										<p:autoComplete required="true" id="transferTo" 
+											value="#{searchCar.seachKarPlate}"
+											completeMethod="#{searchCar.autoCompleteOwner}">
+											<p:ajax update="carListTo"
+												listener="#{searchCar.searchOwnersCar()}" event="keyup" />
+										</p:autoComplete>
+										<p:message id="transferMsgTo" for="transferTo" />
+									</h:panelGrid>
+
+									<p:dataTable value="#{searchCar.carList}" var="car"
+										id="carListTo" style="margin-top:7px">
+										<p:column>
+											<f:facet name="header">ID</f:facet>
+											<h:outputText value="#{car.owner.nationalId}" />
+										</p:column>
+										<p:column>
+											<f:facet name="header">Plate Number</f:facet>
+											<h:outputText value="#{car.carPlate}" />
+										</p:column>
+										
+										<p:column>
+											<f:facet name="header">owned by</f:facet>
+											<h:outputText value="#{car.owner.firstName}" />
+										</p:column>
+
+
+									</p:dataTable>
+									<p:commandButton value="Transfer" style="margin-top:7px"
+										onclick="PF('tranferDld').show();" process="@this" />
+									<p:dialog widgetVar="tranferDld" header="Comments" modal="true">
+										<p:watermark value="Comments" for="commentsTra" />
+										<p:inputTextarea id="commentsTra" style="margin-top:7px"
+											value="#{searchCar.com}" cols="30" rows="5" maxlength="255"
+											counter="wordCounter1" counterTemplate="{0} Remaining" />
+										<br />
+
+										<h:outputLabel value="" id="wordCounter1" />
+										<br />
+
+										<p:commandButton value="Transfer" update="second"
+											style="margin-top:7px" action="#{searchCar.transfer}"
+											process="@this">
+											<f:setPropertyActionListener
+												value="#{authenticate.loggedInUser.username}"
+												target="#{searchCar.action_username}" />
+											<p:confirm header="Confiramation"
+												message="Are you sure you want to transfer?" />
+										</p:commandButton>
+										<p:confirmDialog global="true" showEffect="fade"
+											hideEffect="fade">
+											<p:commandButton value="YES"
+												styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+											<p:commandButton value="NO" styleClass="ui-confirmdialog-no"
+												icon="fa fa-close" />
+										</p:confirmDialog>
+									</p:dialog>
+
+								</p:panel>
+							</div>
+						</div>
+					</h:form>
+				</p:tab>
+				<p:tab title="Car Status">
+					<h:form id="carStatus">
+						<p:messages showSummary="true" id="msg" closable="true" />
+						<h:panelGrid columns="3">
+							<p:watermark value="Search" for="searchCar" />
+							<p:autoComplete id="searchCar" value="#{searchCar.searcKey}"
+								completeMethod="#{searchCar.autoCompleteCar}">
+								<p:ajax update="cars" listener="#{searchCar.search()}"
+									event="keyup" />
+							</p:autoComplete>
+							<p:message id="searchCarMsg" for="searchCar" />
+						</h:panelGrid>
+
+						<p:dataTable value="#{searchCar.carList}" var="car" id="cars"
+							style="margin-top:7px">
+							<p:column>
+								<f:facet name="header">Plate Number</f:facet>
+								<h:outputText value="#{car.carPlate}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">Brand</f:facet>
+								<h:outputText value="#{car.brand}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">Chassis</f:facet>
+								<h:outputText value="#{car.chassisNumber}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">No.of Sits</f:facet>
+								<h:outputText value="#{car.sits}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">Type</f:facet>
+								<h:outputText value="#{car.type}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">Mf.Year</f:facet>
+								<h:outputText value="#{car.manifacturedYear}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">Missing</f:facet>
+								<p:commandButton value="Missing" process="@this"
+									onclick="PF('missDlg').show();" />
+
+								<p:dialog header="Your Comments" widgetVar="missDlg">
+									<p:inputTextarea value="#{reportMissingCar.mitation.comments}"
+										cols="30" rows="5" maxlength="255" counter="wordCounterMsng"
+										counterTemplate="{0} Remaining" />
+									<br />
+									<h:outputLabel value="" id="wordCounterMsng" />
+									<br />
+									<p:commandButton value="Submit"
+										update="cars mainTab:carStatus:msg" process="@this"
+										action="#{reportMissingCar.missing(car)}">
+										<f:setPropertyActionListener
+											value="#{authenticate.loggedInUser.username}"
+											target="#{reportMissingCar.username}" />
+									</p:commandButton>
+								</p:dialog>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">Found</f:facet>
+								<p:commandButton value="Found" onclick="PF('foundDld').show();"
+									process="@this" />
+
+								<p:dialog widgetVar="foundDld" header="Any Comments?">
+									<p:inputTextarea value="#{reportMissingCar.mitation.comments}"
+										cols="30" rows="5" maxlength="255" counter="wordCounterFound"
+										counterTemplate="{0} Remaining" />
+									<br />
+									<h:outputLabel value="" id="wordCounterFound" />
+									<br />
+									<p:commandButton value="Found"
+										update="cars mainTab:carStatus:msg"
+										action="#{reportMissingCar.found(car)}" process="@this">
+										<f:setPropertyActionListener
+											value="#{authenticate.loggedInUser.username}"
+											target="#{reportMissingCar.username}" />
+									</p:commandButton>
+								</p:dialog>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">Comments</f:facet>
+								<p:commandButton value="Report" process="@this"
+									onclick="PF('dlgComments').show();" />
+
+								<p:dialog header="Your Comments" widgetVar="dlgComments">
+									<p:inputTextarea value="#{reportMissingCar.mitation.comments}"
+										cols="30" rows="5" maxlength="255" counter="wordCounter"
+										counterTemplate="{0} Remaining" />
+									<br />
+									<h:outputLabel value="" id="wordCounter" />
+									<br />
+									<p:commandButton value="Submit"
+										update="cars mainTab:carStatus:msg"
+										action="#{reportMissingCar.comments(car)}">
+										<f:setPropertyActionListener
+											value="#{authenticate.loggedInUser.username}"
+											target="#{reportMissingCar.username}" />
+									</p:commandButton>
+								</p:dialog>
+							</p:column>
+
+						</p:dataTable>
+					</h:form>
+
+				</p:tab>
+			</p:tabView>
+		</div>
+	</div>
+</h:body>
+</html>

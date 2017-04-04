@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="bootstrap-theme.css" />
+	<title>Administrator</title>
+</h:head>
+
+<h:body>
+
+
+	<div class="container">
+		<div class="jumbotron" style="background-color: #3790fc;"></div>
+		<h:form>
+			<p:commandButton value="Log out"
+				action="#{generalNuvigation.goToLogin}" style="margin-left:950px"
+				styleClass="btn btn-danger" icon="fa fa-sign-out">
+				<p:confirm header="Confirm"
+					message="Are you sure you want to log out?" icon="fa fa-question" />
+			</p:commandButton>
+			<p:confirmDialog global="true" hideEffect="fade" showEffect="fade">
+				<p:commandButton value="Yes" icon="fa fa-check"
+					styleClass="ui-confirmdialog-yes" />
+				<p:commandButton value="No" icon="fa fa-close"
+					styleClass="ui-confirmdialog-no" />
+			</p:confirmDialog>
+		</h:form>
+		<div class="row">
+			<div class="col-xs-1"></div>
+			<div class="col-xs-10">
+				<h:form id="registerFrm">
+					<p:menubar style="margin-bottom:7px; margin-top: 15px">
+						<p:submenu label="#{authenticate.loggedInUser.username}"
+							icon="fa fa-user">
+							<p:menuitem value="Change Password" url="changePassword.xhtml" />
+							<p:menuitem value="Home" url="index.xhtml" />
+						</p:submenu>
+						<f:facet name="options">
+							<h:outputLabel
+								value="Welcome , #{authenticate.loggedInUser.fname}" />
+						</f:facet>
+					</p:menubar>
+					<p:spacer />
+					<p:panel header="Create User">
+						<p:growl id="growl" showSummary="true" />
+						<h:panelGrid columns="3">
+							<p:watermark value="First Name" for="fname" />
+							<p:inputText value="#{createUsers.users.fname}" id="fname"
+								validatorMessage="Must be between 4 and 25 Charachers"
+								label="First Name" required="true">
+								<f:validateLength minimum="4" maximum="25" for="fname" />
+								<p:ajax update="fMsg" event="keyup" />
+							</p:inputText>
+							<p:message for="fname" id="fMsg" />
+
+							<p:watermark value="Last Name" for="lname" />
+							<p:inputText id="lname" label="Last Name"
+								value="#{createUsers.users.lname}" required="true"
+								style="margin-top:7px" />
+							<p:outputLabel value="" />
+
+							<p:watermark value="User name" for="username" />
+							<p:inputText id="username" label="User Name"
+								validatorMessage="Must be between 4 and 25 Charachers "
+								value="#{createUsers.users.username}" required="true"
+								style="margin-top:7px">
+								<f:validateLength minimum="4" maximum="25" for="lname" />
+								<p:ajax update="userMsg" event="keyup" />
+							</p:inputText>
+							<p:message for="username" id="userMsg" showDetail="true"
+								display="text" />
+
+							<p:watermark value="Password" for="password" />
+							<p:password id="password" label="Password" feedback="true"
+								inline="true" value="#{createUsers.users.password}"
+								required="true" style="margin-top:7px" />
+							<p:outputLabel value="" />
+
+							<p:outputLabel value="" />
+							<p:commandButton value="Register"
+								action="#{createUsers.createNewUser}" style="margin-top:7px"
+								update="registerFrm" />
+
+							<p:outputLabel value="" />
+						</h:panelGrid>
+						<p:messages closable="true" id="messages" />
+						<p:separator />
+						<p:dataTable id="userList" value="#{createUsers.usersList}"
+							var="u" style="margin-top:7px" paginator="true" rows="5"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+							{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+							{RowsPerPageDropdown}"
+							currentPageReportTemplate="({startRecord} - {endRecord}) of 
+							{totalRecords} Records."
+							rowsPerPageTemplate="5,10,15" editable="true">
+
+							<p:ajax event="rowEdit" listener="#{createUsers.onEdit}"
+								update=":registerFrm:growl" />
+							<p:ajax event="rowEditCancel" listener="#{createUsers.onCancel}"
+								update=":registerFrm:growl" />
+
+
+							<p:column headerText="First name">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{u.fname}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{u.fname}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Last name">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{u.lname}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{u.lname}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Emails">
+								<h:outputText value="#{u.username}" />
+							</p:column>
+
+							<p:column headerText="Password">
+								<h:outputText value="#{u.password}" />
+							</p:column>
+
+							<p:column headerText="Status">
+								<center>
+									<h:outputText value="#{u.active}" />
+								</center>
+							</p:column>
+							<p:column style="width:6%" headerText="Edit">
+								<p:rowEditor />
+							</p:column>
+							<p:column headerText="User is">
+								<center>
+									<p:inputSwitch value="#{u.active}">
+										<p:ajax listener="#{createUsers.activateMethod(u)}"
+											update=":registerFrm:growl" />
+									</p:inputSwitch>
+								</center>
+							</p:column>
+							<p:column headerText="Password Reset">
+								<center>
+									<p:commandButton value="Reset"
+										action="#{deleteUser.passwordReset(u)}" process="@this"
+										update="registerFrm ">
+										<p:confirm header="Confirmation"
+											message="Are you sure you want to reset Password?" />
+									</p:commandButton>
+									<p:confirmDialog global="true" hideEffect="fade"
+										showEffect="fade">
+										<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+											icon="fa fa-check" />
+										<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+											icon="fa fa-close" />
+									</p:confirmDialog>
+								</center>
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel>
+
+				</h:form>
+
+			</div>
+			<div class="col-xs-1"></div>
+		</div>
+	</div>
+</h:body>
+</html>

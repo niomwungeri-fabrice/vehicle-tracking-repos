@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="bootstrap-theme.css" />
+	<h:outputStylesheet library="css" name="header.css" />
+	<title>Home</title>
+	<link rel="icon" type="image/jpeg" href="img/prime.jpeg" />
+</h:head>
+
+<h:body>
+
+	<div class="container">
+		<div class="jumbotron" style="background-color: #3790fc">
+			<!-- <h3
+				style="text-align: center; font-family: calibri(body); font-weight: bold; color: white">Vehicle
+				Monitoring System</h3> -->
+		</div>
+		<div class="row">
+			<div class="col-xs-11">
+				<!--<h2
+						 style="text-align: center; font-family: calibri(body); font-weight: bold;">Vehicle
+						Investigation System</h2> -->
+			</div>
+			<div class="col-xs-1">
+				<h:form>
+					<p:commandLink value="SIGN IN"
+						action="login" icon="fa fa-user" />
+				</h:form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4"></div>
+			<div class="col-xs-8">
+				<h:form>
+					<h:panelGrid columns="3" style="margin-top:70px">
+						<p:watermark value="Enter Plate Number" for="searchKey" />
+						<p:autoComplete value="#{carDetails.searcKey}"
+							completeMethod="#{carDetails.autoCompleteCar}" id="searchKey"
+							cache="true" cacheTimeout="3000" forceSelection="true"
+							required="true" />
+
+						<p:commandButton value="Find" action="#{carDetails.search()}"
+							icon="fa fa-search"
+							style="margin-left:3px" />
+					</h:panelGrid>
+				</h:form>
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+	</div>
+</h:body>
+</html>

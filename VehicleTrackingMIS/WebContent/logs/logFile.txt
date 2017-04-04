@@ -1,0 +1,18 @@
+Wed Jan 25 00:19:38 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 09:55:35 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 09:55:37 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 09:55:40 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 09:58:02 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 09:58:25 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:56 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:56 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:56 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:56 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:56 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:57 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Wed Jan 25 10:00:57 EET 2017 : CreateUsers : Illegal attempt to associate a collection with two open sessions
+Mon Jan 30 13:51:04 EET 2017 : CreateUsers : could not execute statement
+Tue Jan 31 19:20:22 EET 2017 : RegisterOwners : could not execute statement
+Tue Jan 31 19:20:51 EET 2017 : RegisterOwners : null
+Thu Feb 02 18:20:50 EET 2017 : RegisterOwners : not-null property references a null or transient value : com.vehicles.model.Mitation.ownedDate
+Sat Feb 04 19:22:27 EET 2017 : CreateUsers : could not execute statement

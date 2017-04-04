@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="bootstrap-theme.css" />
+	<title>Login</title>
+</h:head>
+
+<h:body>
+	<div class="container">
+		<div class="jumbotron" style="background-color: #3790fc;"></div>
+		<h:form>
+			<p:commandButton value="Home" action="index"
+				styleClass="btn btn-info" icon="fa fa-user" />
+		</h:form>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-3"></div>
+			<div class="col-xs-6">
+				<h:form id="loginFrm" style="margin-top:100px">
+					<p:panel header="Login">
+						<p:messages closable="true" showDetail="true" id="gmsg" />
+						<h:panelGrid columns="3">
+
+							<p:watermark value="User Name" for="username" />
+							<p:inputText id="username" value="#{authenticate.username}" />
+							<p:message for="username" />
+
+							<p:watermark value="Password" for="password" />
+							<p:password id="password" value="#{authenticate.users.password}"
+								style="margin-top:7px" />
+							<p:message for="password" />
+							<p:outputLabel value="" />
+
+							<p:commandButton value="Login" update="gmsg"
+								action="#{authenticate.authenticateUsers}"
+								style="margin-top:10px" icon="fa fa-sign-in" />
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</div>
+			<div class="col-xs-3"></div>
+		</div>
+	</div>
+
+
+</h:body>
+</html>

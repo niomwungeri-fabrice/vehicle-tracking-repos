@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="bootstrap-theme.css" />
+	<h:outputStylesheet library="css" name="header.css" />
+	<title>Owner's Registration</title>
+</h:head>
+<h:body>
+	<div class="container">
+		<div class="jumbotron" style="background-color: #FFFFFF;"></div>
+		<div class="row">
+			<p:tabView id="mainTab">
+				<p:tab title="Mitation">
+					<h:form id="second">
+						<p:messages closable="true" />
+						<div class="row">
+							<div class="col-xs-6">
+								<p:panel header="Transfer To" id="transfe">
+								</p:panel>
+							</div>
+							<div class="col-xs-6">
+								<p:panel header="Transfer To" id="transferPanel">
+								</p:panel>
+							</div>
+						</div>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+		</div>
+	</div>
+</h:body>
+</html>
