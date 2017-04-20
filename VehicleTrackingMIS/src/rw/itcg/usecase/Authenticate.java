@@ -73,6 +73,7 @@ public class Authenticate implements Serializable {
 
 	public String authenticateUsers() throws IOException {
 		Users userDB = new UserDao().findUserByUsername(username);
+		
 		try {
 			if (userDB != null) {
 				if (userDB.getPassword().equals(md5(users.getPassword()))) {
